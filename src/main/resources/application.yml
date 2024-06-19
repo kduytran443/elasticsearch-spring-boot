@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: "elasticsearch"
+  elasticsearch:
+    uris: http://localhost:9200
+    connection-timeout: 10s
+    socket-timeout: 10s

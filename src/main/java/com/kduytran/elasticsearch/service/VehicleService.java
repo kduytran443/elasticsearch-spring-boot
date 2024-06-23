@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -52,6 +53,14 @@ public class VehicleService {
         return false;
     }
 
+    public boolean index(final VehicleDocument[] documents) {
+        boolean result = true;
+        for (VehicleDocument document : documents) {
+            result = index(document) == false ? false : result;
+        }
+        return result;
+    }
+
     public VehicleDocument getById(final String id) {
         try {
             final GetResponse response = client.get(
@@ -68,9 +77,19 @@ public class VehicleService {
         }
     }
 
+    public List<VehicleDocument> getAllCreatedSince(final Date date) {
+        final SearchRequest request = SearchUtils.buildSearchRequest(Indices.VEHICLE_INDEX, "created", date);
+
+        return invokeSearchRequest(request);
+    }
+
     public List<VehicleDocument> search(final SearchRequestDTO dto) {
         final SearchRequest request = SearchUtils.buildSearchRequest(Indices.VEHICLE_INDEX, dto);
 
+        return invokeSearchRequest(request);
+    }
+
+    private List<VehicleDocument> invokeSearchRequest(SearchRequest request) {
         if (request == null) {
             LOGGER.error("Failed to build search request");
             return Collections.emptyList();
@@ -88,7 +107,7 @@ public class VehicleService {
             }
             return list;
         } catch (IOException e) {
-            LOGGER.error("Failed to make search response");
+            LOGGER.info("Failed to make search response");
             return Collections.emptyList();
         }
     }

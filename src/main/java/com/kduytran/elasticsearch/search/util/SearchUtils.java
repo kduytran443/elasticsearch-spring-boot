@@ -11,6 +11,7 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Date;
 import java.util.List;
 
 @UtilityClass
@@ -29,6 +30,16 @@ public class SearchUtils {
             );
         }
 
+        request.source(builder);
+        return request;
+    }
+
+    public static SearchRequest buildSearchRequest(final String indexName,
+                                                   final String field,
+                                                   final Date date) {
+        SearchSourceBuilder builder = new SearchSourceBuilder()
+                .postFilter(getQueryBuilder(field, date));
+        SearchRequest request = new SearchRequest(indexName);
         request.source(builder);
         return request;
     }
@@ -54,6 +65,8 @@ public class SearchUtils {
                 .orElse(null);
     }
 
-
+    public static QueryBuilder getQueryBuilder(final String field, final Date date) {
+        return QueryBuilders.rangeQuery(field).gte(date);
+    }
 
 }

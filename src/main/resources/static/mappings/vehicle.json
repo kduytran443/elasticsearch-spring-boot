@@ -3,8 +3,14 @@
     "id": {
       "type": "keyword"
     },
+    "number": {
+      "type": "text"
+    },
     "name": {
       "type": "text"
+    },
+    "created": {
+      "type": "date"
     }
   }
 }

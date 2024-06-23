@@ -3,10 +3,13 @@ package com.kduytran.elasticsearch.controller;
 import com.kduytran.elasticsearch.constant.ResponseConstant;
 import com.kduytran.elasticsearch.document.VehicleDocument;
 import com.kduytran.elasticsearch.dto.ResponseDTO;
+import com.kduytran.elasticsearch.search.SearchRequestDTO;
 import com.kduytran.elasticsearch.service.VehicleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequestMapping("/api/vehicle")
 @RestController
@@ -26,6 +29,11 @@ public class VehicleController {
     @GetMapping("/{id}")
     public ResponseEntity<VehicleDocument> getById(@PathVariable String id) {
         return ResponseEntity.ok(vehicleService.getById(id));
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<List<VehicleDocument>> search(@RequestBody SearchRequestDTO dto) {
+        return ResponseEntity.ok(vehicleService.search(dto));
     }
 
 }

@@ -3,10 +3,7 @@ package com.kduytran.elasticsearch.search.util;
 import com.kduytran.elasticsearch.search.SearchRequestDTO;
 import lombok.experimental.UtilityClass;
 import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.index.query.MultiMatchQueryBuilder;
-import org.elasticsearch.index.query.Operator;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.util.CollectionUtils;
@@ -40,6 +37,29 @@ public class SearchUtils {
         SearchSourceBuilder builder = new SearchSourceBuilder()
                 .postFilter(getQueryBuilder(field, date));
         SearchRequest request = new SearchRequest(indexName);
+        request.source(builder);
+        return request;
+    }
+
+    public static SearchRequest buildSearchRequest(final String indexName,
+                                                   final SearchRequestDTO dto,
+                                                   final Date date) {
+        QueryBuilder searchQuery = getQueryBuilder(dto);
+        QueryBuilder dateQuery = getQueryBuilder("created", date);
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
+                .must(searchQuery)
+                .must(dateQuery);
+        SearchSourceBuilder builder = new SearchSourceBuilder()
+                .postFilter(boolQueryBuilder);
+        SearchRequest request = new SearchRequest(indexName);
+
+        if (dto.getSortBy() != null) {
+            builder = builder.sort(
+                    dto.getSortBy(),
+                    dto.getSortOrder() != null ? dto.getSortOrder() : SortOrder.ASC
+            );
+        }
+
         request.source(builder);
         return request;
     }

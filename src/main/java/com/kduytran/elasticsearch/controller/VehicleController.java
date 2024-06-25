@@ -52,4 +52,10 @@ public class VehicleController {
         return ResponseEntity.ok(vehicleService.getAllCreatedSince(date));
     }
 
+    @PostMapping("/search-date/{date}")
+    public ResponseEntity<List<VehicleDocument>> search(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") final Date date,
+                                                        @RequestBody SearchRequestDTO dto) {
+        return ResponseEntity.ok(vehicleService.searchAllCreatedSince(dto, date));
+    }
+
 }

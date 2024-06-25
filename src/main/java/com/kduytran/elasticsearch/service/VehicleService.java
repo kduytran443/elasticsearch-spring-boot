@@ -77,6 +77,11 @@ public class VehicleService {
         }
     }
 
+    public List<VehicleDocument> searchAllCreatedSince(final SearchRequestDTO dto, final Date date) {
+        final SearchRequest request = SearchUtils.buildSearchRequest(Indices.VEHICLE_INDEX, dto, date);
+        return invokeSearchRequest(request);
+    }
+
     public List<VehicleDocument> getAllCreatedSince(final Date date) {
         final SearchRequest request = SearchUtils.buildSearchRequest(Indices.VEHICLE_INDEX, "created", date);
 

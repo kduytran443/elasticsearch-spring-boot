@@ -6,7 +6,7 @@ import org.elasticsearch.search.sort.SortOrder;
 import java.util.List;
 
 @Data
-public class SearchRequestDTO {
+public class SearchRequestDTO extends PageRequestDTO {
     private List<String> fields;
     private String searchTerm;
     private String sortBy;

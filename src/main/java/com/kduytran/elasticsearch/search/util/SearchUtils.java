@@ -27,6 +27,11 @@ public class SearchUtils {
             );
         }
 
+        final int page = dto.getPage();
+        final int size = dto.getSize();
+        final int from = page <= 0 ? 0 : page * size;
+        builder.from(from).size(size);
+
         request.source(builder);
         return request;
     }
